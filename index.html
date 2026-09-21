@@ -438,6 +438,51 @@ details.expl .eb{padding:0 20px 20px;display:grid;gap:12px;font-size:15.5px}
   .rh .when{display:none}
   .adm-head h1{font-size:22px}
 }
+
+/* ============ Sesi 3: tabel pemetaan ============ */
+.maphead{display:grid;grid-template-columns:minmax(0,1fr) 132px 132px;gap:14px;padding:0 2px 9px;border-bottom:2px solid var(--line)}
+.maphead div{font:800 12.5px 'Nunito Sans',sans-serif;color:var(--muted)}
+.maphead div+div{color:var(--teal-deep);text-align:center}
+@media(max-width:700px){.maphead{display:none}}
+.maphead.two{grid-template-columns:minmax(0,1fr) 150px}
+@media(min-width:701px){
+  .trow.map{grid-template-columns:minmax(0,1fr) 132px 132px}
+  .trow.map .tgl{width:100%;justify-content:center}
+}
+
+.mtab{display:inline-flex;align-items:center;gap:8px;max-width:240px}
+.mtab .tab-dot{width:9px;height:9px;border-radius:50%;border:1.5px solid currentColor;opacity:.4;flex:0 0 auto}
+.mtab .tab-dot.partial{background:var(--orange);border-color:var(--orange);opacity:1}
+.mtab .tab-dot.done{background:currentColor;opacity:1}
+.mtab.on .tab-dot.partial{background:#fff;border-color:#fff}
+.mtab .tab-nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.mtab .tab-count{font:800 11.5px 'Nunito Sans',sans-serif;opacity:.7;flex:0 0 auto}
+
+/* ============ Sesi 3: hasil ============ */
+.note{display:flex;gap:11px;font-size:14.5px;line-height:1.6;color:var(--ink);margin-bottom:10px}
+.note:last-child{margin-bottom:0}
+.note .nd{width:7px;height:7px;border-radius:3px;background:var(--orange);margin-top:8px;flex:0 0 auto}
+
+.jmx-wrap{overflow-x:auto;margin-top:4px}
+.jmx{border-collapse:collapse;min-width:100%}
+.jmx th,.jmx td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:center;white-space:nowrap}
+.jmx th{font:800 12px 'Nunito Sans',sans-serif;color:var(--navy)}
+.jmx .mx-t{text-align:left;font-size:13.5px;font-weight:600;color:var(--ink);position:sticky;left:0;background:#fff}
+.jmx thead .mx-t{color:var(--muted)}
+.jmx .mx-d{display:inline-block;width:13px;height:13px;border-radius:50%}
+
+.mcard{border:1px solid var(--line);border-radius:14px;padding:18px;margin-top:12px;background:#fff}
+.mcard-h{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.mcard-h .avatar{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--teal),var(--teal-deep));color:#fff;display:grid;place-items:center;font:800 17px 'Montserrat',sans-serif;flex:0 0 auto}
+.mcard-h b{font:800 18px 'Montserrat',sans-serif;color:var(--navy);display:block;line-height:1.15}
+.mcard-h small{font-size:13px;color:var(--muted)}
+
+.commit{margin-top:16px;padding-top:14px;border-top:1px dashed var(--line)}
+.commit .f textarea{min-height:64px}
+
+.lam-commit{margin-top:14px}
+.lam-commit .lc{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:9px 13px;margin-bottom:7px;font-size:13.5px;line-height:1.5}
+.lam-commit .lc b{color:var(--navy)}
 </style>
 </head>
 <body>
@@ -521,7 +566,7 @@ function blank(){
     profile:{nama:'',kelompok:'',tim:''},
     c:{saya:'',adalah:'',yang:'',kata:'',bigGoal:'',valueDiri:'',valueTim:'',perilaku:'',kekuatanDiri:'',kekuatanTim:'',rekomendasi:'',goal:'',reality:'',options:'',will:''},
     team:[],
-    j:{step:0,traits:TRAITS.slice(),self:{},map:{},active:'',view:''},
+    j:{step:0,traits:TRAITS.slice(),self:{},map:{},active:'',view:'',commit:''},
     sw:{focus:'team'},
     comp:{diri:{k:'',u:'',c:''},tim:{m:'',k:'',u:'',c:''},will:{apa:'',kapan:'',ukuran:'',dukungan:''}},
     sent:{s1:null,s2:null,s3:null,s4:null},
@@ -913,7 +958,8 @@ function jStep1(){
     var on = !!state.j.self[t];
     return '<div class="trow' + (on ? ' on' : '') + '"><div><div class="tn">' + esc(t) + '</div><div class="td">' + esc(defRaw(t)) + '</div></div><button type="button" class="tgl big" data-act="self" data-t="' + esc(t) + '" aria-pressed="' + on + '">Ada pada saya</button></div>';
   }).join('');
-  return jSteps() + panelAcc('Refleksi diri', '<p class="help">Untuk setiap karakteristik, tandai jika Anda merasa hal itu memang ada pada diri Anda saat ini. Jujur lebih berguna daripada terlihat baik.</p>' + rows +
+  return jSteps() + panelAcc('Refleksi diri', '<p class="help">Untuk setiap karakteristik, tandai jika Anda merasa hal itu memang ada pada diri Anda saat ini. Jujur lebih berguna daripada terlihat baik.</p>' +
+    '<div class="maphead two"><div>Karakteristik</div><div>Ada pada diri saya</div></div>' + rows +
     '<p class="mini" style="margin-top:12px"><span id="selfCount">' + selfYes().length + '</span> dari ' + state.j.traits.length + ' ditandai</p>') +
     '<div class="navrow"><button type="button" class="btn ghost" data-act="jstep" data-n="0">Kembali</button><button type="button" class="btn acc" data-act="jstep" data-n="2">Lanjut petakan anggota</button></div>';
 }
@@ -921,23 +967,35 @@ function jCounts(id){
   var b = buckets(id), keys = ['open','blind','hidden','unknown'], bg = {open:'#DDF3F1',blind:'#FEEFD0',hidden:'#E4ECF7',unknown:'#ECEFF2'}, ink = {open:'#0A5F5A',blind:'#8A5200',hidden:'#33557F',unknown:'#4B5563'};
   return keys.map(function(k){ return '<div style="background:' + bg[k] + ';color:' + ink[k] + '"><b>' + b[k].length + '</b>' + AREAS[k].label + '</div>'; }).join('');
 }
+function jTouched(id){
+  var mp = state.j.map[id] || {seen:{},aware:{}};
+  return state.j.traits.filter(function(t){ return mp.seen[t] || mp.aware[t]; }).length;
+}
 function jStep2(){
   var ms = members();
   if (!ms.length) return jSteps() + panelAcc('Petakan anggota', '<p class="empty">Belum ada anggota bernama. Tambahkan dulu di langkah pertama, atau lewati ke hasil untuk melihat refleksi diri saja.</p>' +
     '<div class="navrow"><button type="button" class="btn ghost" data-act="jstep" data-n="0">Tambah anggota</button><button type="button" class="btn acc" data-act="jstep" data-n="3">Lewati, lihat hasil</button></div>');
   if (!memberById(state.j.active) || !state.j.active) state.j.active = ms[0].id;
-  var m = memberById(state.j.active), mp = state.j.map[m.id] || {seen:{},aware:{}};
-  var tabs = ms.map(function(x){ return '<button type="button" class="chip' + (x.id === m.id ? ' on' : '') + '" data-act="jm" data-id="' + x.id + '"><span data-nm="' + x.id + '">' + esc(x.name) + '</span>' + (mapped(x.id) ? ' &#10003;' : '') + '</button>'; }).join('');
+  var m = memberById(state.j.active), mp = state.j.map[m.id] || {seen:{},aware:{}}, tot = state.j.traits.length;
+  var tabs = ms.map(function(x){
+    var n = jTouched(x.id), cls = n === 0 ? '' : (n >= tot ? ' done' : ' partial');
+    return '<button type="button" class="chip mtab' + (x.id === m.id ? ' on' : '') + '" data-act="jm" data-id="' + x.id + '" title="' + esc(x.name) + ': ' + n + ' dari ' + tot + ' karakteristik ditandai">' +
+      '<span class="tab-dot' + cls + '"></span><span class="tab-nm" data-nm="' + x.id + '">' + esc(x.name) + '</span>' +
+      '<span class="tab-count">' + n + '/' + tot + '</span></button>';
+  }).join('');
   var rows = state.j.traits.map(function(t){
-    var s = !!mp.seen[t], a = !!mp.aware[t], ar = classify(s, a);
-    return '<div class="trow map" data-area="' + ar + '"><div><div class="tn">' + esc(t) + '</div><div class="td">' + esc(defRaw(t)) + '</div><span class="area-tag">' + AREAS[ar].label + '</span></div>' +
-      '<button type="button" class="tgl" data-act="jflag" data-id="' + m.id + '" data-t="' + esc(t) + '" data-k="seen" aria-pressed="' + s + '">Saya lihat</button>' +
-      '<button type="button" class="tgl" data-act="jflag" data-id="' + m.id + '" data-t="' + esc(t) + '" data-k="aware" aria-pressed="' + a + '">Ia sadari</button></div>';
+    var s = !!mp.seen[t], a = !!mp.aware[t], ar = classify(s, a), show = s || a;
+    return '<div class="trow map" data-area="' + ar + '"><div><div class="tn">' + esc(t) + '</div><div class="td">' + esc(defRaw(t)) + '</div>' +
+      (show ? '<span class="area-tag">' + AREAS[ar].label + '</span>' : '') + '</div>' +
+      '<button type="button" class="tgl" data-act="jflag" data-id="' + m.id + '" data-t="' + esc(t) + '" data-k="seen" aria-pressed="' + s + '" aria-label="Saya melihat ' + esc(t) + ' pada ' + esc(m.name) + '">Saya lihat</button>' +
+      '<button type="button" class="tgl" data-act="jflag" data-id="' + m.id + '" data-t="' + esc(t) + '" data-k="aware" aria-pressed="' + a + '" aria-label="Menurut saya ' + esc(m.name) + ' sadar punya ' + esc(t) + '">Ia sadari</button></div>';
   }).join('');
   var idx = ms.indexOf(m), last = idx === ms.length - 1;
   return jSteps() + panelAcc('Petakan anggota tim',
     '<p class="help">Dua pertanyaan untuk tiap karakteristik: apakah Anda melihatnya pada dia (<b>Saya lihat</b>), dan apakah menurut Anda ia menyadarinya sendiri (<b>Ia sadari</b>). Tebakan terbaik Anda sudah cukup.</p>' +
-    '<div class="mtabs" role="group" aria-label="Pilih anggota">' + tabs + '</div><div class="counts" id="jcounts">' + jCounts(m.id) + '</div>' + rows) +
+    '<div class="tipbox" style="margin-bottom:16px"><b>Ini sudut pandang Anda.</b> Kolom <b>Ia sadari</b> diisi dari perkiraan Anda sebagai leader, bukan dari pengakuan langsung anggota. Perlakukan hasilnya sebagai hipotesis awal yang sebaiknya dikonfirmasi langsung bersama orangnya.</div>' +
+    '<div class="mtabs" role="group" aria-label="Pilih anggota">' + tabs + '</div><div class="counts" id="jcounts">' + jCounts(m.id) + '</div>' +
+    '<div class="maphead"><div>Karakteristik</div><div>Saya lihat pada dia</div><div>Menurut saya, ia sadar punya ini</div></div>' + rows) +
     '<div class="navrow"><button type="button" class="btn ghost" data-act="jstep" data-n="1">Kembali</button>' +
     (last ? '<button type="button" class="btn acc" data-act="jstep" data-n="3">Lihat hasil</button>' : '<button type="button" class="btn acc" data-act="jm" data-id="' + ms[idx+1].id + '">Anggota berikutnya</button>') + '</div>';
 }
@@ -970,35 +1028,72 @@ function composerDiri(){
     '<div class="cprev' + (composeDiri() ? '' : ' empty-p') + '" data-cp="diri">' + (esc(composeDiri()) || 'Kalimat Anda akan tampil di sini.') + '</div>' +
     '<div><button type="button" class="btn acc sm" data-act="apply-diri">Tulis ke Canvas</button></div></div>';
 }
+function jTotals(){
+  var t = teamSummary().totals, keys = ['open','blind','hidden','unknown'];
+  var bg = {open:'#DDF3F1',blind:'#FEEFD0',hidden:'#E4ECF7',unknown:'#ECEFF2'}, ink = {open:'#0A5F5A',blind:'#8A5200',hidden:'#33557F',unknown:'#4B5563'};
+  return '<div class="counts">' + keys.map(function(k){
+    return '<div style="background:' + bg[k] + ';color:' + ink[k] + '"><b>' + t[k] + '</b>' + AREAS[k].label + '</div>';
+  }).join('') + '</div>';
+}
+function jLegend(){
+  return '<div class="legend">' + ['open','blind','hidden','unknown'].map(function(k){
+    return '<span><i style="background:' + AREAS[k].color + '"></i>' + AREAS[k].label + '</span>'; }).join('') + '</div>';
+}
+function jMatrix(mm){
+  var head = '<th class="mx-t">Karakteristik</th>' + mm.map(function(m){ return '<th>' + esc(firstName(m)) + '</th>'; }).join('');
+  var rows = state.j.traits.map(function(t){
+    return '<tr><td class="mx-t">' + esc(t) + '</td>' + mm.map(function(m){
+      var mp = jmap(m.id), k = classify(!!mp.seen[t], !!mp.aware[t]);
+      return '<td><span class="mx-d" style="background:' + AREAS[k].color + '" title="' + esc(m.name) + ' &middot; ' + esc(t) + ' &middot; ' + AREAS[k].label + '"></span></td>';
+    }).join('') + '</tr>';
+  }).join('');
+  return '<div class="jmx-wrap"><table class="jmx"><thead><tr>' + head + '</tr></thead><tbody>' + rows + '</tbody></table></div>' + jLegend();
+}
+function memberCard(m){
+  var i = state.team.indexOf(m);
+  return '<div class="mcard"><div class="mcard-h"><div class="avatar">' + esc((m.name.trim().charAt(0) || '?').toUpperCase()) + '</div>' +
+    '<div><b>' + esc(m.name.trim()) + '</b>' + (m.role.trim() ? '<small>' + esc(m.role.trim()) + '</small>' : '') + '</div></div>' +
+    windowHtml(m.id) +
+    '<div class="recs" style="margin-top:14px">' + memberRecs(m).map(function(r){
+      return '<div class="rec" style="--c:' + TONE[r.tone] + '"><h4>' + esc(r.title) + '</h4><p>' + esc(r.text) + '</p></div>'; }).join('') + '</div>' +
+    '<div class="commit">' + inp('team.' + i + '.commit', 'Komitmen aksi untuk ' + esc(firstName(m)) + ' (2 minggu ke depan)',
+      'contoh: ajak ' + firstName(m) + ' 1-on-1 minggu ini untuk mengonfirmasi kekuatannya', 300, {area:1, rows:2}) + '</div></div>';
+}
 function jStep3(){
   var yes = selfYes(), no = selfNo(), ms = members(), ts = teamSummary();
-  var selfPanel = panelPlain('<h2 class="t">Diri Anda</h2><p class="help">Yang Anda rasa sudah ada, dan yang masih perlu tumbuh.</p>' +
-    '<div class="grid2"><div><div class="cg-l">Sudah ada pada saya</div><div class="chips">' + (yes.length ? yes.map(function(t){ return '<span class="chip on" style="cursor:default">' + esc(t) + '</span>'; }).join('') : '<span class="mini">Belum ada yang ditandai</span>') + '</div></div>' +
-    '<div><div class="cg-l">Belum saya rasa ada</div><div class="chips">' + (no.length ? no.map(function(t){ return '<span class="chip" style="cursor:default">' + esc(t) + '</span>'; }).join('') : '<span class="mini">Semua sudah ditandai</span>') + '</div></div></div>' +
-    '<div class="recs" style="margin-top:16px">' + selfRecs().map(function(r){ return '<div class="rec" style="--c:' + TONE[r.tone] + '"><h4>' + esc(r.title) + '</h4><p>' + esc(r.text) + '</p></div>'; }).join('') + '</div>');
-  var teamPanel = '';
   var mm = ms.filter(function(m){ return mapped(m.id); });
+
+  var selfPanel = panelPlain('<h2 class="t">Refleksi diri Anda</h2><p class="help">Yang Anda rasa sudah ada, dan yang masih perlu tumbuh.</p>' +
+    '<div class="grid2"><div><div class="cg-l">Kekuatan yang Anda sadari</div><div class="chips">' +
+      (yes.length ? yes.map(function(t){ return '<span class="chip on" style="cursor:default">' + esc(t) + '</span>'; }).join('') : '<span class="mini">Belum ada yang ditandai</span>') + '</div></div>' +
+    '<div><div class="cg-l">Area untuk dikembangkan</div><div class="chips">' +
+      (no.length ? no.map(function(t){ return '<span class="chip" style="cursor:default">' + esc(t) + '</span>'; }).join('') : '<span class="mini">Semua sudah ditandai</span>') + '</div></div></div>' +
+    '<div class="recs" style="margin-top:16px">' + selfRecs().map(function(r){
+      return '<div class="rec" style="--c:' + TONE[r.tone] + '"><h4>' + esc(r.title) + '</h4><p>' + esc(r.text) + '</p></div>'; }).join('') + '</div>' +
+    '<div class="commit">' + inp('j.commit', 'Komitmen pengembangan diri (30 hari ke depan)',
+      'contoh: melatih satu karakteristik yang belum saya sadari lewat satu situasi kerja nyata minggu ini', 300, {area:1, rows:2}) + '</div>');
+
+  var teamPanel = '';
   if (mm.length){
-    if (!memberById(state.j.view) || !mapped(state.j.view)) state.j.view = mm[0].id;
-    var bars = mm.map(function(m){ var b = buckets(m.id), tot = state.j.traits.length || 1;
-      return '<div class="cmp"><span title="' + esc(m.name) + '">' + esc(m.name) + '</span><div class="stackbar" role="img" aria-label="' + esc(m.name) + ': ' + b.open.length + ' terbuka, ' + b.blind.length + ' belum disadari, ' + b.hidden.length + ' tersembunyi, ' + b.unknown.length + ' belum tergali">' +
-        ['open','blind','hidden','unknown'].map(function(k){ return '<i style="width:' + (b[k].length / tot * 100) + '%;background:' + AREAS[k].color + '"></i>'; }).join('') + '</div></div>'; }).join('');
-    var tabs = mm.map(function(x){ return '<button type="button" class="chip' + (x.id === state.j.view ? ' on' : '') + '" data-act="jview" data-id="' + x.id + '">' + esc(x.name) + '</button>'; }).join('');
-    var cur = memberById(state.j.view);
-    teamPanel = panelPlain('<h2 class="t">Tim Anda</h2><p class="help">Perbandingan antaranggota, lalu jendela Johari per orang.</p>' + bars +
-      '<div class="legend">' + ['open','blind','hidden','unknown'].map(function(k){ return '<span><i style="background:' + AREAS[k].color + '"></i>' + AREAS[k].label + '</span>'; }).join('') + '</div>' +
-      '<div class="sep-line" style="margin:16px 0"></div><div class="mtabs">' + tabs + '</div>' + windowHtml(cur.id) +
-      '<div class="recs" style="margin-top:16px">' + memberRecs(cur).map(function(r){ return '<div class="rec" style="--c:' + TONE[r.tone] + '"><h4>' + esc(r.title) + '</h4><p>' + esc(r.text) + '</p></div>'; }).join('') + '</div>' +
-      (ts.notes.length ? '<div class="tipbox" style="margin-top:16px"><b>Untuk seluruh tim.</b> ' + ts.notes.map(esc).join(' ') + '</div>' : ''));
+    teamPanel = panelPlain('<h2 class="t">Peta kekuatan tim ' + esc(state.profile.tim.trim()) + '</h2>' +
+      '<p class="help">' + mm.length + ' anggota dipetakan dari ' + state.j.traits.length + ' karakteristik.</p>' + jTotals() +
+      (ts.notes.length ? '<div style="margin-top:18px">' + ts.notes.map(function(n){ return '<div class="note"><span class="nd"></span><span>' + esc(n) + '</span></div>'; }).join('') + '</div>' : '') +
+      '<div class="sep-line" style="margin:18px 0 14px"></div>' +
+      '<h3 class="sub-h">Perbandingan antaranggota</h3>' +
+      '<p class="help" style="margin-bottom:10px">Satu tampilan untuk melihat pola di seluruh tim, misalnya karakteristik yang belum Terbuka pada siapa pun.</p>' +
+      jMatrix(mm)) +
+      mm.map(memberCard).join('');
   } else if (ms.length) {
-    teamPanel = panelPlain('<h2 class="t">Tim Anda</h2><p class="empty">Belum ada anggota yang dipetakan. Kembali ke langkah 3 untuk memulai.</p>');
+    teamPanel = panelPlain('<h2 class="t">Peta kekuatan tim</h2><p class="empty">Belum ada anggota yang dipetakan. Kembali ke langkah 3 untuk memulai.</p>');
   }
+
   var bring = panelAcc('Bawa ke Canvas',
     '<p class="help">Pilih satu kekuatan untuk Anda dan satu untuk anggota tim, lalu tulis caranya. Anda tetap bisa menyunting kalimatnya sesudah masuk Canvas.</p>' +
     '<h3 class="sub-h">Satu kekuatan diri</h3>' + composerDiri() + inp('c.kekuatanDiri', 'Hasil di Canvas (bisa disunting)', 'Kalimat akan muncul di sini', MAX.kekuatanDiri, {area:1,rows:2}) +
     '<div class="sep-line" style="margin:22px 0 18px"></div><h3 class="sub-h">Satu kekuatan anggota tim</h3>' + composerTim() + inp('c.kekuatanTim', 'Hasil di Canvas (bisa disunting)', 'Kalimat akan muncul di sini', MAX.kekuatanTim, {area:1,rows:2}) +
     '<div class="sep-line" style="margin:22px 0 18px"></div><h3 class="sub-h">Rekomendasi dari assessment</h3>' +
     '<div class="composer"><div><button type="button" class="btn ghost sm" data-act="apply-assess">Susun ringkasan dari hasil saya</button></div>' + inp('c.rekomendasi', 'Rekomendasi (bisa disunting)', 'Ringkasan hasil Johari', MAX.rekomendasi, {area:1,rows:3}) + '</div>');
+
   return jSteps() + selfPanel + teamPanel + bring +
     sendBar('s3') +
     '<div class="navrow"><button type="button" class="btn ghost" data-act="jstep" data-n="2">Kembali</button><button type="button" class="btn acc" data-act="go" data-to="s4">Lanjut ke Sesi 4</button></div>';
@@ -1039,6 +1134,16 @@ function viewS4(){
 }
 
 /* ============ Canvas Saya ============ */
+function lamCommit(mm){
+  var rows = [];
+  if (String(state.j.commit || '').trim()) rows.push('<div class="lc"><b>Saya sendiri:</b> ' + esc(state.j.commit.trim()) + '</div>');
+  mm.forEach(function(m){
+    var c = String(m.commit || '').trim();
+    if (c) rows.push('<div class="lc"><b>' + esc(firstName(m)) + ':</b> ' + esc(c) + '</div>');
+  });
+  if (!rows.length) return '';
+  return '<div class="lam-commit"><h3 class="sub-h" style="margin-top:16px">Komitmen aksi</h3>' + rows.join('') + '</div>';
+}
 function lampiranHtml(){
   var mm = members().filter(function(m){ return mapped(m.id); });
   if (!mm.length) return '<section class="lampiran"><h2>Lampiran: Peta Kekuatan Tim</h2><p class="lede">Lampiran muncul setelah Anda memetakan anggota tim di Sesi 3.</p></section>';
@@ -1052,7 +1157,7 @@ function lampiranHtml(){
     (arch ? '<div class="arch" style="margin-top:16px"><b>Arsitektur tim saya.</b> ' + arch + '</div>' : '') +
     '<div class="lam-grid"><div><h3 class="sub-h">Johari: perbandingan anggota</h3>' + bars +
     (ts.notes.length ? '<div class="tipbox" style="margin-top:16px"><b>Untuk seluruh tim.</b> ' + ts.notes.map(esc).join(' ') + '</div>' : '') + '</div>' +
-    '<div><h3 class="sub-h">Langkah utama per anggota</h3><div class="recs">' + recs + '</div></div></div></section>';
+    '<div><h3 class="sub-h">Langkah utama per anggota</h3><div class="recs">' + recs + '</div>' + lamCommit(mm) + '</div></div></section>';
 }
 function viewCanvas(){
   var p = prog(), pct = Math.round(p.filled / p.total * 100);
@@ -1118,8 +1223,10 @@ function payloadFor(k){
     out.karakteristikDiri = selfYes();
     out.anggota = members().filter(function(m){ return mapped(m.id); }).map(function(m){
       var b = buckets(m.id);
-      return {nama:m.name.trim(), peran:m.role.trim(), terbuka:b.open, belumDisadari:b.blind, tersembunyi:b.hidden, belumTergali:b.unknown};
+      return {nama:m.name.trim(), peran:m.role.trim(), komitmen:String(m.commit || '').trim(),
+              terbuka:b.open, belumDisadari:b.blind, tersembunyi:b.hidden, belumTergali:b.unknown};
     });
+    out.komitmenDiri = String(state.j.commit || '').trim();
   }
   if (k === 's4'){
     var w = state.comp.will;
@@ -1236,10 +1343,11 @@ function admState(g){
   var p3 = (g.s[3] && g.s[3].payload) || null;
   if (p3){
     (p3.karakteristikDiri || []).forEach(function(t){ st.j.self[t] = true; });
+    st.j.commit = p3.komitmenDiri || '';
     var used = {};
     (p3.anggota || []).forEach(function(m, i){
       var id = 'adm' + i, mp = {seen:{}, aware:{}};
-      st.team.push({id:id, name:m.nama || '', role:m.peran || ''});
+      st.team.push({id:id, name:m.nama || '', role:m.peran || '', commit:m.komitmen || ''});
       (m.terbuka || []).forEach(function(t){ mp.seen[t] = true; mp.aware[t] = true; used[t] = 1; });
       (m.belumDisadari || []).forEach(function(t){ mp.seen[t] = true; used[t] = 1; });
       (m.tersembunyi || []).forEach(function(t){ mp.aware[t] = true; used[t] = 1; });
@@ -1467,7 +1575,7 @@ var ACT = {
   ex1: function(el){ var e = EX1[+el.dataset.i]; state.c.saya = e[0]; state.c.adalah = e[1]; state.c.yang = e[2]; live(); },
   'team-add': function(){
     if (state.team.length >= 12) return;
-    state.team.push({id:uid(), name:'', role:''}); rerender();
+    state.team.push({id:uid(), name:'', role:'', commit:''}); rerender();
     var ins = $$('#main .mrow input[data-bind$=".name"]'); if (ins.length) ins[ins.length - 1].focus();
   },
   'team-del': function(el){
@@ -1499,14 +1607,25 @@ var ACT = {
     var c = $('#selfCount'); if (c) c.textContent = selfYes().length; queueSave();
   },
   jm: function(el){ state.j.active = el.dataset.id; rerender(); queueSave(); },
-  jview: function(el){ state.j.view = el.dataset.id; rerender(); queueSave(); },
   jflag: function(el){
     var id = el.dataset.id, t = el.dataset.t, k = el.dataset.k;
     var mp = state.j.map[id] || (state.j.map[id] = {seen:{}, aware:{}});
     mp[k][t] = !mp[k][t]; el.setAttribute('aria-pressed', !!mp[k][t]);
-    var row = el.closest('.trow'), a = classify(!!mp.seen[t], !!mp.aware[t]);
-    row.dataset.area = a; row.querySelector('.area-tag').textContent = AREAS[a].label;
-    var c = $('#jcounts'); if (c) c.innerHTML = jCounts(id); queueSave(); chromeUpdate();
+    var row = el.closest('.trow'), sn = !!mp.seen[t], aw = !!mp.aware[t], ar = classify(sn, aw);
+    row.dataset.area = ar;
+    var tag = row.querySelector('.area-tag');
+    if (sn || aw){
+      if (!tag){ tag = document.createElement('span'); tag.className = 'area-tag'; row.firstElementChild.appendChild(tag); }
+      tag.textContent = AREAS[ar].label;
+    } else if (tag) { tag.remove(); }
+    var c = $('#jcounts'); if (c) c.innerHTML = jCounts(id);
+    var tab = $('.mtab[data-id="' + id + '"]');
+    if (tab){
+      var n = jTouched(id), tot = state.j.traits.length;
+      tab.querySelector('.tab-count').textContent = n + '/' + tot;
+      tab.querySelector('.tab-dot').className = 'tab-dot' + (n === 0 ? '' : (n >= tot ? ' done' : ' partial'));
+    }
+    queueSave(); chromeUpdate();
   },
   'pick-diri': function(el){ state.comp.diri.k = el.dataset.t; rerender(); queueSave(); },
   'pick-tim': function(el){ state.comp.tim.k = el.dataset.t; rerender(); queueSave(); },
